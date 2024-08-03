@@ -1,5 +1,6 @@
 from pydub import AudioSegment
 import os
+import speech_recognition as sr
 
 
 def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_length_ms=300000):
@@ -37,13 +38,34 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
 
         segment.export(segment_filename, format="mp3")
         print(f"Segment {i + 1} saved as {dest_file_dir}_part_{i + 1}.mp3")
+
+
+def transcribe_audio(file_path, duration_sec=300):
+    # Initialize recognizer class (for recognizing the speech)
+    r = sr.Recognizer()
+    
+    # Load the audio file
+    audio = AudioSegment.from_mp3(file_path)
+    
+    # Extract the first 5 minutes (300 seconds) of the audio file
+    audio_segment = audio[:duration_sec * 1000]
+    
+    # Export this segment to a temporary WAV file
+    audio_segment.export("temp.wav", format="wav")
+    
+    # Transcribe the audio file
+    with sr.AudioFile("temp.wav") as source:
+        audio_text = r.record(source)
         
-
-# Path to the audio file
-# audio_file_path = "path_to_your_audio_file.mp3"
-
-# Segment the audio file into 5-minute chunks
-# segment_audio(audio_file_path)
+        try:
+            # Using Google speech recognition to transcribe in Hindi
+            text = r.recognize_google(audio_text, language="hi-IN")
+        except sr.UnknownValueError:
+            text = "Sorry, I did not understand the audio."
+        except sr.RequestError:
+            text = "Sorry, my speech service is down."
+    
+    return text
 
 
 def get_source_file_names(src_dir, dest_dir):
@@ -76,10 +98,14 @@ if __name__ == '__main__':
     # print(resultRecordsDir)
 
     # Read all mp3 filenames from source.
-    all_audio_files = get_source_file_names(src_dir=sourceRecordsDir, dest_dir=resultRecordsDir)
-    print(all_audio_files)
+    # all_audio_files = get_source_file_names(src_dir=sourceRecordsDir, dest_dir=resultRecordsDir)
+    # print(all_audio_files)
 
     # Segment the audio and store in new directory
-    for audio_tuple in all_audio_files:
-        segment_audio(audio_file_name=audio_tuple[0], audio_file_path=audio_tuple[1], dest_file_dir=audio_tuple[2])
+    # for audio_tuple in all_audio_files:
+    #     segment_audio(audio_file_name=audio_tuple[0], audio_file_path=audio_tuple[1], dest_file_dir=audio_tuple[2])
+
+    audio_file_path = '/Users/anurag/Projects/audio-parser/output/Timothy_1/Timothy_1_part_1.mp3'
+    transcription = transcribe_audio(file_path=audio_file_path, duration_sec=300)
+    print(transcription)
     
