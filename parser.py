@@ -1,4 +1,6 @@
 from pydub import AudioSegment
+import os
+
 
 def segment_audio(audio_file_path, segment_length_ms=300000):
     # Load the audio file
@@ -28,4 +30,26 @@ def segment_audio(audio_file_path, segment_length_ms=300000):
 
 # Main 
 if __name__ == '__main__':
-    print('Works')
+    currWorkDir = os.getcwd()
+    sourceRecordsDir = os.path.join('{cwd}/records/'.format(cwd=currWorkDir))
+    resultRecordsDir = os.path.join('{cwd}/output/'.format(cwd=currWorkDir))
+
+    print(currWorkDir)
+    print(sourceRecordsDir)
+    print(resultRecordsDir)
+
+    # Read all mp3 filenames from source.
+    # (src_file_name, src_file_path, dest_file_dir)
+    file_name_list = list()
+    for file in os.listdir(sourceRecordsDir):
+        if os.path.isfile(os.path.join(sourceRecordsDir, file)):
+            src_fname, src_fextension = file.split('.', 1)
+            # print(src_fname, file)
+            src_fpath = os.path.join(sourceRecordsDir, file)
+            dest_fdir = os.path.join(resultRecordsDir, src_fname)
+            print(dest_fdir)
+            
+            # append tuple to existing list
+            file_name_list.append((src_fname, src_fpath, dest_fdir))
+    
+    print(file_name_list)
