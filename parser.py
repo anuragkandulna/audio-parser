@@ -28,18 +28,11 @@ def segment_audio(audio_file_path, segment_length_ms=300000):
 # Segment the audio file into 5-minute chunks
 # segment_audio(audio_file_path)
 
-# Main 
-if __name__ == '__main__':
-    currWorkDir = os.getcwd()
-    sourceRecordsDir = os.path.join('{cwd}/records/'.format(cwd=currWorkDir))
-    resultRecordsDir = os.path.join('{cwd}/output/'.format(cwd=currWorkDir))
 
-    print(currWorkDir)
-    print(sourceRecordsDir)
-    print(resultRecordsDir)
-
-    # Read all mp3 filenames from source.
-    # (src_file_name, src_file_path, dest_file_dir)
+def get_source_file_names(src_dir, dest_dir):
+    """
+    Parse filenames and return a list of (src_file_name, src_file_path, dest_file_dir).
+    """
     file_name_list = list()
     for file in os.listdir(sourceRecordsDir):
         if os.path.isfile(os.path.join(sourceRecordsDir, file)):
@@ -52,4 +45,18 @@ if __name__ == '__main__':
             # append tuple to existing list
             file_name_list.append((src_fname, src_fpath, dest_fdir))
     
-    print(file_name_list)
+    return file_name_list
+
+
+# Main 
+if __name__ == '__main__':
+    currWorkDir = os.getcwd()
+    sourceRecordsDir = os.path.join('{cwd}/records/'.format(cwd=currWorkDir))
+    resultRecordsDir = os.path.join('{cwd}/output/'.format(cwd=currWorkDir))
+
+    print(currWorkDir)
+    print(sourceRecordsDir)
+    print(resultRecordsDir)
+
+    # Read all mp3 filenames from source.
+    
