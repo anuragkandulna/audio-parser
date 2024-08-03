@@ -2,10 +2,17 @@ from pydub import AudioSegment
 import os
 
 
-def segment_audio(audio_file_path, segment_length_ms=300000):
+def segment_audio(audio_file_path, dest_file_dir, segment_length_ms=300000):
+    """
+    Cut audio and save to file.
+    """
     # Load the audio file
     audio = AudioSegment.from_mp3(audio_file_path)
     
+    # Create output directory if it doesn't exist
+    if not os.path.exists(dest_file_dir):
+        os.makedirs(dest_file_dir)
+
     # Get the total duration of the audio file in milliseconds
     total_duration_ms = len(audio)
     
@@ -13,14 +20,22 @@ def segment_audio(audio_file_path, segment_length_ms=300000):
     num_segments = total_duration_ms // segment_length_ms + (1 if total_duration_ms % segment_length_ms != 0 else 0)
     
     # Split the audio into segments
-    for i in range(num_segments):
+    for i in range(1):
         start_time = i * segment_length_ms
         end_time = start_time + segment_length_ms
         segment = audio[start_time:end_time]
         
         # Export the segment to a new file
-        segment.export(f"segment_{i + 1}.mp3", format="mp3")
-        print(f"Segment {i + 1} saved as segment_{i + 1}.mp3")
+        segment_filename = os.path.join(dest_file_dir, f"_part_{i + 1}.mp3")
+
+        # Check if the output file already exists
+        if os.path.exists(segment_filename):
+            print(f"File {segment_filename} already exists!!! Skipping this segment...")
+            continue
+
+        segment.export(segment_filename, format="mp3")
+        print(f"Segment {i + 1} saved as {dest_file_dir}_part_{i + 1}.mp3")
+        
 
 # Path to the audio file
 # audio_file_path = "path_to_your_audio_file.mp3"
@@ -48,7 +63,7 @@ def get_source_file_names(src_dir, dest_dir):
     return file_name_list
 
 
-# Main 
+##################################################################
 if __name__ == '__main__':
     currWorkDir = os.getcwd()
     sourceRecordsDir = os.path.join('{cwd}/records/'.format(cwd=currWorkDir))
@@ -59,4 +74,9 @@ if __name__ == '__main__':
     print(resultRecordsDir)
 
     # Read all mp3 filenames from source.
+    all_audio_files = get_source_file_names(src_dir=sourceRecordsDir, dest_dir=resultRecordsDir)
+    
+    # Segment the audio and store in new directory
+    for audio_tuple in all_audio_files:
+        segment_audio(audio_file_path=audio_tuple[1], dest_file_dir=resultRecordsDir[2])
     
