@@ -27,7 +27,7 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
         segment = audio[start_time:end_time]
         
         # Export the segment to a new file
-        segment_filename = os.path.join(dest_file_dir, f"{audio_file_name}_part_{i + 1}.wav")
+        segment_filename = os.path.join(dest_file_dir, f"{audio_file_name}_part_{i + 1}.mp3")
 
         # Check if the output file already exists
         if os.path.exists(segment_filename):
@@ -46,16 +46,19 @@ def transcribe_audio(audio_file_path, duration_sec=300):
     r = sr.Recognizer()
 
     # Load the audio file
-    # audio = AudioSegment.from_mp3(file_path)
+    audio = AudioSegment.from_mp3(file_path)
 
     # Extract the first 5 minutes (300 seconds) of the audio file
     # audio_segment = audio[:duration_sec * 1000]
 
     # Export this segment to a temporary WAV file
-    # audio_segment.export("temp.wav", format="wav")
+    afile_arr = audio_file_path.split('/')
+    fname, fext = afile_arr[-1].split('.', 1)
+    temp_file_name = f"temp_{fname}.wav"
+    audio.export(temp_file_name, format="wav")
 
     # Transcribe the audio file
-    with sr.AudioFile(audio_file_path) as source:
+    with sr.AudioFile(temp) as source:
         audio_text = r.record(source)
         
         try:
@@ -125,6 +128,7 @@ if __name__ == '__main__':
 
     # Read all mp3 filenames from source.
     all_audio_files = get_source_file_names(src_dir=sourceRecordsDir, dest_dir=resultRecordsDir, text_dir=textRecordsDir)
+    print('PRINTING AUDIO DIR')
     print(all_audio_files)
 
     # Segment the audio and store in new directory
