@@ -27,34 +27,35 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
         segment = audio[start_time:end_time]
         
         # Export the segment to a new file
-        segment_filename = os.path.join(dest_file_dir, f"{audio_file_name}_part_{i + 1}.mp3")
-        # print(segment_filename)
-        # return
+        segment_filename = os.path.join(dest_file_dir, f"{audio_file_name}_part_{i + 1}.wav")
 
         # Check if the output file already exists
         if os.path.exists(segment_filename):
             print(f"File {segment_filename} already exists!!! Skipping this segment...")
             continue
 
-        segment.export(segment_filename, format="mp3")
+        segment.export(segment_filename, format="wav")
         print(f"Segment {i + 1} saved as {dest_file_dir}_part_{i + 1}.mp3")
 
 
 def transcribe_audio(file_path, duration_sec=300):
+    """
+    Transcribe audio.wav to hindi language text.
+    """
     # Initialize recognizer class (for recognizing the speech)
     r = sr.Recognizer()
     
     # Load the audio file
-    audio = AudioSegment.from_mp3(file_path)
+    # audio = AudioSegment.from_mp3(file_path)
     
     # Extract the first 5 minutes (300 seconds) of the audio file
-    audio_segment = audio[:duration_sec * 1000]
+    # audio_segment = audio[:duration_sec * 1000]
     
     # Export this segment to a temporary WAV file
-    audio_segment.export("temp.wav", format="wav")
+    # audio_segment.export("temp.wav", format="wav")
     
     # Transcribe the audio file
-    with sr.AudioFile("temp.wav") as source:
+    with sr.AudioFile(file_path) as source:
         audio_text = r.record(source)
         
         try:
@@ -64,7 +65,7 @@ def transcribe_audio(file_path, duration_sec=300):
             text = "Sorry, I did not understand the audio."
         except sr.RequestError:
             text = "Sorry, my speech service is down."
-    
+
     return text
 
 
