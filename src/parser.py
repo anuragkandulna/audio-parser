@@ -73,6 +73,7 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
     # Create output directory if it doesn't exist
     if not os.path.exists(dest_file_dir):
         os.makedirs(dest_file_dir)
+        LOGGER.info(f'Created new dir {dest_file_dir}')
 
     # Get the total duration of the audio file in milliseconds
     total_duration_ms = len(audio)
@@ -82,21 +83,25 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
     
     # Split the audio into segments
     for i in range(num_segments):
-        start_time = i * segment_length_ms
-        end_time = start_time + segment_length_ms
-        segment = audio[start_time:end_time]
-        
         # Export the segment to a new file
         segment_file_string = f"{audio_file_name}_part_{i + 1}.mp3"
         segment_filename = os.path.join(dest_file_dir, segment_file_string)
 
         # Check if the output file already exists
         if os.path.exists(segment_filename):
-            print(f"File {segment_filename} already exists!!! Skipping this segment...")
+            # print(f"File {segment_filename} already exists... Skipping this segment!!!")
+            LOGGER.info(f"Segmented audio file {segment_filename} already exists... Skipping this segment!!!")
             continue
 
-        segment.export(segment_filename, format="wav")
-        print(f"Segment {i + 1} saved as {segment_file_string}")
+        # Start Segmenting here if the file does not exists
+        start_time = i * segment_length_ms
+        end_time = start_time + segment_length_ms
+        segment = audio[start_time:end_time]
+
+        # Export the segmented audio to mp3/wav format
+        segment.export(segment_filename, format="mp3")
+        # print(f"Segment {i + 1} saved as {segment_file_string}")
+        LOGGER.info(f"{audio_file_name} segment {i + 1} saved as {segment_file_string}")
 
 
 def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
