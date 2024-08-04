@@ -5,7 +5,7 @@ from src.custom_logger import get_logger
 
 
 # Invoke Logger
-LOGGER = get_logger()
+LOGGER = get_logger(__name__)
 
 
 ##################################################################
