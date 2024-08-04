@@ -124,12 +124,12 @@ if __name__ == '__main__':
     # print(resultRecordsDir)
 
     # Read all mp3 filenames from source.
-    # all_audio_files = get_source_file_names(src_dir=sourceRecordsDir, dest_dir=resultRecordsDir)
-    # print(all_audio_files)
+    all_audio_files = get_source_file_names(src_dir=sourceRecordsDir, dest_dir=resultRecordsDir, text_dir=textRecordsDir)
+    print(all_audio_files)
 
     # Segment the audio and store in new directory
-    # for audio_tuple in all_audio_files:
-    #     segment_audio(audio_file_name=audio_tuple[0], audio_file_path=audio_tuple[1], dest_file_dir=audio_tuple[2])
+    for audio_tuple in all_audio_files:
+        segment_audio(audio_file_name=audio_tuple[0], audio_file_path=audio_tuple[1], dest_file_dir=audio_tuple[2])
 
     # Transcribe and write to file
     for audio_tuple in all_audio_files:
