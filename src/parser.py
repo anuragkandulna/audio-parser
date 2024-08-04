@@ -37,9 +37,9 @@ def get_source_file_names(src_dir, dest_dir, text_dir):
             
             # append tuple to existing list
             file_name_list.append((src_fname, src_fpath, dest_fdir, text_path))
-    
+
     # print(f'All file names in here: {file_name_list}')
-    LOGGER.info(f'All files from source dir {src_dir}: {file_name_list}')
+    LOGGER.info(f'Source dir details {src_dir}: {file_name_list}')
     return file_name_list
 
 
@@ -58,7 +58,8 @@ def get_all_audio_files_in_dir(audio_file_dir, file_extension=".mp3"):
             if (os.path.splitext(file_path)[1].lower() == file_extension):
                 audio_files.append((file_name, file_path))
     
-    print(f'All *{file_extension} file in {audio_file_dir}: {audio_files}')
+    # print(f'All *{file_extension} file in {audio_file_dir}: {audio_files}')
+    LOGGER.info(f'List of all *{file_extension} files in {audio_file_dir}: {audio_files}')
     return audio_files
 
 
