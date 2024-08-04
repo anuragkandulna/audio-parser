@@ -34,13 +34,13 @@ def get_all_audio_files_in_dir(audio_file_dir, file_extension=".mp3"):
     # List all files first and then sort
     files = os.listdir(audio_file_dir)
     
-    for filename in files:
-        file_path = os.path.join(directory, filename)
+    for file_name in files:
+        file_path = os.path.join(directory, file_name)
         if os.path.isfile(file_path):
             if (os.path.splitext(file_path)[1].lower() == file_extension):
-                audio_files.append(filename)
+                audio_files.append((file_name, file_path))
     
-    print(f'All *{file_extension} file in {audio_file_dir}')
+    print(f'All *{file_extension} file in {audio_file_dir}: {audio_files}')
     return audio_files
 
 
@@ -80,7 +80,7 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
         print(f"Segment {i + 1} saved as {segment_file_string}")
 
 
-def transcribe_audio(audio_file_path, duration_sec=300):
+def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
     """
     Transcribe audio.wav to hindi language text.
     """
@@ -96,7 +96,9 @@ def transcribe_audio(audio_file_path, duration_sec=300):
     # Export this segment to a temporary WAV file
     epoch = int(time.time())
     afile_arr = audio_file_path.split('/')
-    fname, fext = afile_arr[-1].split('.', 1)
+    # fname, fext = afile_arr[-1].split('.', 1)
+    # temp_file_name = f"temp_{fname}_{epoch}.wav"
+    fname, fext = audio_file_name.split('.', 1)
     temp_file_name = f"temp_{fname}_{epoch}.wav"
     audio.export(temp_file_name, format="wav")
     print(f'Successfully created temp wav audio file {temp_file_name}')
@@ -165,11 +167,14 @@ if __name__ == '__main__':
     for audio_tuple in all_audio_files:
         segment_audio(audio_file_name=audio_tuple[0], audio_file_path=audio_tuple[1], dest_file_dir=audio_tuple[2])
 
-    # Transcribe and write to file
+    # Get segmented audio list and then transcribe and write to file
     for audio_tuple in all_audio_files:
-        transcription = transcribe_audio(audio_file_path=audio_tuple[1], duration_sec=300)
+        segmented_audio_files = get_all_audio_files_in_dir(audio_file_dir=audio_tuple[2])
 
-        write_text_to_file(text_data=transcription, audio_file_path=audio_tuple[1], dest_text_dir=audio_tuple[3])
+        for seg_fname, seg_fpath in segmented_audio_files:
+            transcription = transcribe_audio(audio_file_name=seg_fname, audio_file_path=seg_fpath, duration_sec=300)
+
+            write_text_to_file(text_data=transcription, audio_file_path=audio_tuple[1], dest_text_dir=audio_tuple[3])
 
     # audio_file_path = '/Users/anurag/Projects/audio-parser/output/Timothy_1/Timothy_1_part_1.mp3'
     # transcription = transcribe_audio(file_path=audio_file_path, duration_sec=300)
