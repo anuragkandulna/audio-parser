@@ -35,7 +35,7 @@ def get_all_audio_files_in_dir(audio_file_dir, file_extension=".mp3"):
     files = os.listdir(audio_file_dir)
     
     for file_name in files:
-        file_path = os.path.join(directory, file_name)
+        file_path = os.path.join(audio_file_dir, file_name)
         if os.path.isfile(file_path):
             if (os.path.splitext(file_path)[1].lower() == file_extension):
                 audio_files.append((file_name, file_path))
