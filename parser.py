@@ -89,32 +89,35 @@ def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
     audio = AudioSegment.from_mp3(audio_file_path)
 
     # Export this segment to a temporary WAV file
-    epoch = int(time.time())
-    fname, fext = audio_file_name.split('.', 1)
-    temp_file_name = f"temp_{fname}_{epoch}.wav"
-    audio.export(temp_file_name, format="wav")
-    print(f'Successfully created temp wav audio file {temp_file_name}')
+    # epoch = int(time.time())
+    # fname, fext = audio_file_name.split('.', 1)
+    # temp_file_name = f"temp_{fname}_{epoch}.wav"
+    # audio.export(temp_file_name, format="wav")
+    # print(f'Successfully created temp wav audio file {temp_file_name}')
+    # time.sleep(1)
 
     # Transcribe the audio file
-    with sr.AudioFile(temp_file_name) as source:
+    with sr.AudioFile(audio_file_path) as source:
         audio_text = r.record(source)
 
         try:
             # Using Google speech recognition to transcribe in Hindi
             # text = r.recognize_sphinx(audio_text, language="hi-IN")
             text = r.recognize_google(audio_text, language="hi-IN")
-        except sr.UnknownValueError:
-            text = "Sorry, I did not understand the audio."
-        except sr.RequestError:
-            text = "Sorry, my speech service is down."
+        # except sr.UnknownValueError:
+        #     text = "Sorry, I did not understand the audio."
+        # except sr.RequestError:
+        #     text = "Sorry, my speech service is down."
+        except Exception as ex:
+            text = f"Exception occurred while processing file {audio_file_path}: {ex}"
 
     # Delete temp WAV file
-    try:
-        os.remove(temp_file_name)
-    except Exception as ex:
-        print(f'Exception occurred upon {temp_file_name} deletion: {ex}')
+    # try:
+    #     os.remove(temp_file_name)
+    # except Exception as ex:
+    #     print(f'Exception occurred upon {temp_file_name} deletion: {ex}')
 
-    return text
+    return '' if 'Exception' in text else text
 
 
 def write_text_to_file(text_data, audio_file_name, audio_file_path, dest_text_dir):
@@ -163,4 +166,5 @@ if __name__ == '__main__':
 
             print(f'Starting writing to file for audio {seg_fname}...')
             write_text_to_file(text_data=transcription, audio_file_name=seg_fname, audio_file_path=seg_fpath, dest_text_dir=audio_tuple[3])
+            break
   
