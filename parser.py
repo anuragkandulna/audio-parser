@@ -69,9 +69,9 @@ def transcribe_audio(file_path, duration_sec=300):
     return text
 
 
-def get_source_file_names(src_dir, dest_dir):
+def get_source_file_names(src_dir, dest_dir, text_dir):
     """
-    Parse filenames and return a list of (src_file_name, src_file_path, dest_file_dir).
+    Parse filenames and return a list of (src_file_name, src_file_path, dest_file_dir, text_path).
     """
     file_name_list = list()
     for file in os.listdir(sourceRecordsDir):
@@ -80,10 +80,11 @@ def get_source_file_names(src_dir, dest_dir):
             # print(src_fname, file)
             src_fpath = os.path.join(sourceRecordsDir, file)
             dest_fdir = os.path.join(resultRecordsDir, src_fname)
+            text_path = os.path.join(text_dir, src_fname)
             # print(dest_fdir)
             
             # append tuple to existing list
-            file_name_list.append((src_fname, src_fpath, dest_fdir))
+            file_name_list.append((src_fname, src_fpath, dest_fdir, text_path))
     
     return file_name_list
 
