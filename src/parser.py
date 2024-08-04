@@ -73,7 +73,7 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
     # Create output directory if it doesn't exist
     if not os.path.exists(dest_file_dir):
         os.makedirs(dest_file_dir)
-        LOGGER.info(f'Created new dir {dest_file_dir}')
+        LOGGER.info(f'Created new segment sub-dir {dest_file_dir}')
 
     # Get the total duration of the audio file in milliseconds
     total_duration_ms = len(audio)
@@ -154,19 +154,24 @@ def write_text_to_file(text_data, audio_file_name, audio_file_path, dest_text_di
     """
     Write hindi language text to file.
     """
-    # Define the Hindi language string
-    # hindi_text = "प्रिय मित्रो, स्वागत है आपका हमारे इस कार्यक्रम सत्य वचन में।"
+    # If text_data is not recived then skip writing to text
+    if text_data == '' or text_data is None:
+        LOGGER.warning(f'No text received for audio {audio_file_path}')
+        return
 
     # Create output directory if it doesn't exist
     if not os.path.exists(dest_text_dir):
         os.makedirs(dest_text_dir)
+        LOGGER.info(f'Created new text sub-dir {dest_text_dir}')
 
     # Define the path to the text file
     fname, fext = audio_file_name.split('.', 1)
     text_file_path = f"{dest_text_dir}/{fname}.txt"
 
     # Write the Hindi string to the text file
+    LOGGER.info(f'Writing {audio_file_name} audio transcribed text to {text_file_path}')
     with open(text_file_path, "w", encoding="utf-8") as file:
         file.write(text_data)
 
-    print(f"Audio {audio_file_path} text written to {text_file_path}")
+    # print(f"Audio {audio_file_path} text written to {text_file_path}")
+    LOGGER.info(f"Audio {audio_file_path} text written successfully to {text_file_path}")
