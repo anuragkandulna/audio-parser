@@ -163,3 +163,8 @@ cython_debug/
 
 # Python virtual environment created by Project Orion
 .venv/
+
+
+# Other files
+records/*
+output/*
