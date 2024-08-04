@@ -4,6 +4,46 @@ import speech_recognition as sr
 from pydub import AudioSegment
 
 
+def get_source_file_names(src_dir, dest_dir, text_dir):
+    """
+    Parse filenames and return a list of (src_file_name, src_file_path, dest_file_dir, text_path).
+    """
+    file_name_list = list()
+    for file in os.listdir(sourceRecordsDir):
+        if os.path.isfile(os.path.join(sourceRecordsDir, file)):
+            src_fname, src_fextension = file.split('.', 1)
+            # print(src_fname, file)
+            src_fpath = os.path.join(sourceRecordsDir, file)
+            dest_fdir = os.path.join(resultRecordsDir, src_fname)
+            text_path = os.path.join(text_dir, src_fname)
+            # print(dest_fdir)
+            
+            # append tuple to existing list
+            file_name_list.append((src_fname, src_fpath, dest_fdir, text_path))
+    
+    print(f'All file names in here: {file_name_list}')
+    return file_name_list
+
+
+def get_all_audio_files_in_dir(audio_file_dir, file_extension=".mp3"):
+    """
+    Read all files in a directory and return list of audio files.
+    """
+    audio_files = list()
+
+    # List all files first and then sort
+    files = os.listdir(audio_file_dir)
+    
+    for filename in files:
+        file_path = os.path.join(directory, filename)
+        if os.path.isfile(file_path):
+            if (os.path.splitext(file_path)[1].lower() == file_extension):
+                audio_files.append(filename)
+    
+    print(f'All *{file_extension} file in {audio_file_dir}')
+    return audio_files
+
+
 def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_length_ms=300000):
     """
     Cut audio and save to file.
@@ -80,27 +120,6 @@ def transcribe_audio(audio_file_path, duration_sec=300):
         print(f'Exception occurred upon {temp_file_name} deletion: {ex}')
 
     return text
-
-
-def get_source_file_names(src_dir, dest_dir, text_dir):
-    """
-    Parse filenames and return a list of (src_file_name, src_file_path, dest_file_dir, text_path).
-    """
-    file_name_list = list()
-    for file in os.listdir(sourceRecordsDir):
-        if os.path.isfile(os.path.join(sourceRecordsDir, file)):
-            src_fname, src_fextension = file.split('.', 1)
-            # print(src_fname, file)
-            src_fpath = os.path.join(sourceRecordsDir, file)
-            dest_fdir = os.path.join(resultRecordsDir, src_fname)
-            text_path = os.path.join(text_dir, src_fname)
-            # print(dest_fdir)
-            
-            # append tuple to existing list
-            file_name_list.append((src_fname, src_fpath, dest_fdir, text_path))
-    
-    print(f'All file names in here: {file_name_list}')
-    return file_name_list
 
 
 def write_text_to_file(text_data, audio_file_path, dest_text_dir):
