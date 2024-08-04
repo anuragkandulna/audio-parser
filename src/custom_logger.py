@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 # Create handlers
-file_handler = logging.FileHandler('app_parser.log')
+file_handler = logging.FileHandler('parser_application.log')
 console_handler = logging.StreamHandler()
 
 # Set level of logging for handlers
