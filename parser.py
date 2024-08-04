@@ -38,24 +38,24 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
         print(f"Segment {i + 1} saved as {dest_file_dir}_part_{i + 1}.mp3")
 
 
-def transcribe_audio(file_path, duration_sec=300):
+def transcribe_audio(audio_file_path, duration_sec=300):
     """
     Transcribe audio.wav to hindi language text.
     """
     # Initialize recognizer class (for recognizing the speech)
     r = sr.Recognizer()
-    
+
     # Load the audio file
     # audio = AudioSegment.from_mp3(file_path)
-    
+
     # Extract the first 5 minutes (300 seconds) of the audio file
     # audio_segment = audio[:duration_sec * 1000]
-    
+
     # Export this segment to a temporary WAV file
     # audio_segment.export("temp.wav", format="wav")
-    
+
     # Transcribe the audio file
-    with sr.AudioFile(file_path) as source:
+    with sr.AudioFile(audio_file_path) as source:
         audio_text = r.record(source)
         
         try:
