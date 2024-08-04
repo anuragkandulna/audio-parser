@@ -12,11 +12,9 @@ def get_source_file_names(src_dir, dest_dir, text_dir):
     for file in os.listdir(sourceRecordsDir):
         if os.path.isfile(os.path.join(sourceRecordsDir, file)):
             src_fname, src_fextension = file.split('.', 1)
-            # print(src_fname, file)
             src_fpath = os.path.join(sourceRecordsDir, file)
             dest_fdir = os.path.join(resultRecordsDir, src_fname)
             text_path = os.path.join(text_dir, src_fname)
-            # print(dest_fdir)
             
             # append tuple to existing list
             file_name_list.append((src_fname, src_fpath, dest_fdir, text_path))
@@ -90,14 +88,8 @@ def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
     # Load the audio file
     audio = AudioSegment.from_mp3(audio_file_path)
 
-    # Extract the first 5 minutes (300 seconds) of the audio file
-    # audio_segment = audio[:duration_sec * 1000]
-
     # Export this segment to a temporary WAV file
     epoch = int(time.time())
-    # afile_arr = audio_file_path.split('/')
-    # fname, fext = afile_arr[-1].split('.', 1)
-    # temp_file_name = f"temp_{fname}_{epoch}.wav"
     fname, fext = audio_file_name.split('.', 1)
     temp_file_name = f"temp_{fname}_{epoch}.wav"
     audio.export(temp_file_name, format="wav")
@@ -111,12 +103,10 @@ def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
             # Using Google speech recognition to transcribe in Hindi
             # text = r.recognize_sphinx(audio_text, language="hi-IN")
             text = r.recognize_google(audio_text, language="hi-IN")
-        # except sr.UnknownValueError:
-        #     text = "Sorry, I did not understand the audio."
-        # except sr.RequestError:
-        #     text = "Sorry, my speech service is down."
-        except Exception as ex:
-            text = f'Failed to process audio. Exception: {ex}'
+        except sr.UnknownValueError:
+            text = "Sorry, I did not understand the audio."
+        except sr.RequestError:
+            text = "Sorry, my speech service is down."
 
     # Delete temp WAV file
     try:
@@ -139,8 +129,6 @@ def write_text_to_file(text_data, audio_file_name, audio_file_path, dest_text_di
         os.makedirs(dest_text_dir)
 
     # Define the path to the text file
-    # afile_arr = audio_file_path.split('/')
-    # fname, fext = afile_arr[-1].split('.', 1)
     fname, fext = audio_file_name.split('.', 1)
     text_file_path = f"{dest_text_dir}/{fname}.txt"
 
@@ -158,14 +146,8 @@ if __name__ == '__main__':
     resultRecordsDir = os.path.join('{cwd}/output/'.format(cwd=currWorkDir))
     textRecordsDir = os.path.join('{cwd}/text/'.format(cwd=currWorkDir))
 
-    # print(currWorkDir)
-    # print(sourceRecordsDir)
-    # print(resultRecordsDir)
-
     # Read all mp3 filenames from source.
     all_audio_files = get_source_file_names(src_dir=sourceRecordsDir, dest_dir=resultRecordsDir, text_dir=textRecordsDir)
-    # print('PRINTING AUDIO DIR')
-    # print(all_audio_files)
 
     # Segment the audio and store in new directory
     for audio_tuple in all_audio_files:
@@ -181,9 +163,4 @@ if __name__ == '__main__':
 
             print(f'Starting writing to file for audio {seg_fname}...')
             write_text_to_file(text_data=transcription, audio_file_name=seg_fname, audio_file_path=seg_fpath, dest_text_dir=audio_tuple[3])
-            break;
-
-    # audio_file_path = '/Users/anurag/Projects/audio-parser/output/Timothy_1/Timothy_1_part_1.mp3'
-    # transcription = transcribe_audio(file_path=audio_file_path, duration_sec=300)
-    # print(transcription)
-    
+  
