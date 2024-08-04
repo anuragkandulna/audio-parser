@@ -167,4 +167,3 @@ cython_debug/
 
 # Other files
 records/*
-output/*
