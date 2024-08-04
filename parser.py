@@ -1,6 +1,7 @@
-from pydub import AudioSegment
+import time
 import os
 import speech_recognition as sr
+from pydub import AudioSegment
 
 
 def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_length_ms=300000):
@@ -46,19 +47,21 @@ def transcribe_audio(audio_file_path, duration_sec=300):
     r = sr.Recognizer()
 
     # Load the audio file
-    audio = AudioSegment.from_mp3(file_path)
+    audio = AudioSegment.from_mp3(audio_file_path)
 
     # Extract the first 5 minutes (300 seconds) of the audio file
     # audio_segment = audio[:duration_sec * 1000]
 
     # Export this segment to a temporary WAV file
+    epoch = int(time.time())
     afile_arr = audio_file_path.split('/')
     fname, fext = afile_arr[-1].split('.', 1)
-    temp_file_name = f"temp_{fname}.wav"
+    temp_file_name = f"temp_{fname}_{epoch}.wav"
     audio.export(temp_file_name, format="wav")
+    print(f'Successfully created temp wav audio file {temp_file_name}')
 
     # Transcribe the audio file
-    with sr.AudioFile(temp) as source:
+    with sr.AudioFile(temp_file_name) as source:
         audio_text = r.record(source)
         
         try:
@@ -68,6 +71,12 @@ def transcribe_audio(audio_file_path, duration_sec=300):
             text = "Sorry, I did not understand the audio."
         except sr.RequestError:
             text = "Sorry, my speech service is down."
+
+    # Delete temp WAV file
+    try:
+        os.remove(temp_file_name)
+    except Exception as ex:
+        print(f'Exception occurred upon {temp_file_name} deletion: {ex}')
 
     return text
 
@@ -89,6 +98,7 @@ def get_source_file_names(src_dir, dest_dir, text_dir):
             # append tuple to existing list
             file_name_list.append((src_fname, src_fpath, dest_fdir, text_path))
     
+    print(f'All file names in here: {file_name_list}')
     return file_name_list
 
 
@@ -106,13 +116,13 @@ def write_text_to_file(text_data, audio_file_path, dest_text_dir):
     # Define the path to the text file
     afile_arr = audio_file_path.split('/')
     fname, fext = afile_arr[-1].split('.', 1)
-    text_file_path = f"{dest_file_dir}/{fname}.txt"
+    text_file_path = f"{dest_text_dir}/{fname}.txt"
 
     # Write the Hindi string to the text file
     with open(text_file_path, "w", encoding="utf-8") as file:
         file.write(text_data)
 
-    print(f"Hindi text written to {text_file_path}")
+    print(f"Audio {audio_file_path} text written to {text_file_path}")
 
 
 ##################################################################
@@ -128,8 +138,8 @@ if __name__ == '__main__':
 
     # Read all mp3 filenames from source.
     all_audio_files = get_source_file_names(src_dir=sourceRecordsDir, dest_dir=resultRecordsDir, text_dir=textRecordsDir)
-    print('PRINTING AUDIO DIR')
-    print(all_audio_files)
+    # print('PRINTING AUDIO DIR')
+    # print(all_audio_files)
 
     # Segment the audio and store in new directory
     for audio_tuple in all_audio_files:
