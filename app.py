@@ -1,6 +1,6 @@
 import time
 import os
-from src.parser import get_source_file_names, segment_audio, transcribe_audio, write_text_to_file
+from src.parser import get_source_file_names, segment_audio, get_all_audio_files_in_dir, transcribe_audio, write_text_to_file
 from src.custom_logger import get_logger
 
 
