@@ -109,11 +109,14 @@ def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
 
         try:
             # Using Google speech recognition to transcribe in Hindi
+            # text = r.recognize_sphinx(audio_text, language="hi-IN")
             text = r.recognize_google(audio_text, language="hi-IN")
-        except sr.UnknownValueError:
-            text = "Sorry, I did not understand the audio."
-        except sr.RequestError:
-            text = "Sorry, my speech service is down."
+        # except sr.UnknownValueError:
+        #     text = "Sorry, I did not understand the audio."
+        # except sr.RequestError:
+        #     text = "Sorry, my speech service is down."
+        except Exception as ex:
+            text = f'Failed to process audio. Exception: {ex}'
 
     # Delete temp WAV file
     try:
