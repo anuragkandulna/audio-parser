@@ -4,24 +4,42 @@ import time
 import os
 import speech_recognition as sr
 from pydub import AudioSegment
+from src.custom_logger import get_logger
 
 
+# Invoke Logger
+LOGGER = get_logger()
+
+
+# --------------------------- Supporting functions start here ------------------------------- #
 def get_source_file_names(src_dir, dest_dir, text_dir):
     """
     Parse filenames and return a list of (src_file_name, src_file_path, dest_file_dir, text_path).
     """
     file_name_list = list()
-    for file in os.listdir(sourceRecordsDir):
-        if os.path.isfile(os.path.join(sourceRecordsDir, file)):
+
+    # Iterate through all files/directories and add the mp3 file names to a list
+    try:
+        os.path.isdir(src_dir)
+        os.path.isdir(dest_dir)
+        os.path.isdir(text_dir)
+
+    except Exception as ex:
+        LOGGER.critical(f'Exception occurred when accessing {src_dir}: {ex}')
+        raise UnknownValueError(f'Exception occurred when accessing {src_dir}: {ex}')
+
+    for file in os.listdir(src_dir):
+        if os.path.isfile(os.path.join(src_dir, file)):
             src_fname, src_fextension = file.split('.', 1)
-            src_fpath = os.path.join(sourceRecordsDir, file)
-            dest_fdir = os.path.join(resultRecordsDir, src_fname)
+            src_fpath = os.path.join(src_dir, file)
+            dest_fdir = os.path.join(dest_dir, src_fname)
             text_path = os.path.join(text_dir, src_fname)
             
             # append tuple to existing list
             file_name_list.append((src_fname, src_fpath, dest_fdir, text_path))
     
-    print(f'All file names in here: {file_name_list}')
+    # print(f'All file names in here: {file_name_list}')
+    LOGGER.info(f'All files from source dir {src_dir}: {file_name_list}')
     return file_name_list
 
 
@@ -142,4 +160,3 @@ def write_text_to_file(text_data, audio_file_name, audio_file_path, dest_text_di
         file.write(text_data)
 
     print(f"Audio {audio_file_path} text written to {text_file_path}")
-    
