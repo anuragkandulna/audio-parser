@@ -89,6 +89,29 @@ def get_source_file_names(src_dir, dest_dir, text_dir):
     return file_name_list
 
 
+def write_text_to_file(text_data, audio_file_path, dest_text_dir):
+    """
+    Write hindi language text to file.
+    """
+    # Define the Hindi language string
+    # hindi_text = "प्रिय मित्रो, स्वागत है आपका हमारे इस कार्यक्रम सत्य वचन में।"
+
+    # Create output directory if it doesn't exist
+    if not os.path.exists(dest_text_dir):
+        os.makedirs(dest_text_dir)
+
+    # Define the path to the text file
+    afile_arr = audio_file_path.split('/')
+    fname, fext = afile_arr[-1].split('.', 1)
+    text_file_path = f"{dest_file_dir}/{fname}.txt"
+
+    # Write the Hindi string to the text file
+    with open(text_file_path, "w", encoding="utf-8") as file:
+        file.write(text_data)
+
+    print(f"Hindi text written to {text_file_path}")
+
+
 ##################################################################
 if __name__ == '__main__':
     currWorkDir = os.getcwd()
