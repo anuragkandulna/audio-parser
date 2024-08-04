@@ -112,7 +112,7 @@ def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
     r = sr.Recognizer()
 
     # Load the audio file
-    audio = AudioSegment.from_mp3(audio_file_path)
+    # audio = AudioSegment.from_mp3(audio_file_path)
 
     # Export this segment to a temporary WAV file
     # epoch = int(time.time())
@@ -123,6 +123,9 @@ def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
     # time.sleep(1)
 
     # Transcribe the audio file
+    LOGGER.info(f'Starting transcription for audio file {audio_file_path}')
+    text = ''
+
     with sr.AudioFile(audio_file_path) as source:
         audio_text = r.record(source)
 
@@ -130,12 +133,13 @@ def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
             # Using Google speech recognition to transcribe in Hindi
             # text = r.recognize_sphinx(audio_text, language="hi-IN")
             text = r.recognize_google(audio_text, language="hi-IN")
-        # except sr.UnknownValueError:
-        #     text = "Sorry, I did not understand the audio."
-        # except sr.RequestError:
-        #     text = "Sorry, my speech service is down."
+            # except sr.UnknownValueError:
+            #     text = "Sorry, I did not understand the audio."
+            # except sr.RequestError:
+            #     text = "Sorry, my speech service is down."
         except Exception as ex:
-            text = f"Exception occurred while processing file {audio_file_path}: {ex}"
+            LOGGER.error(f"Exception occurred while processing file {audio_file_path}: {ex}")
+            # text = f"Exception occurred while processing file {audio_file_path}: {ex}"
 
     # Delete temp WAV file
     # try:
@@ -143,7 +147,7 @@ def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
     # except Exception as ex:
     #     print(f'Exception occurred upon {temp_file_name} deletion: {ex}')
 
-    return '' if 'Exception' in text else text
+    return text
 
 
 def write_text_to_file(text_data, audio_file_name, audio_file_path, dest_text_dir):
