@@ -95,7 +95,7 @@ def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
 
     # Export this segment to a temporary WAV file
     epoch = int(time.time())
-    afile_arr = audio_file_path.split('/')
+    # afile_arr = audio_file_path.split('/')
     # fname, fext = afile_arr[-1].split('.', 1)
     # temp_file_name = f"temp_{fname}_{epoch}.wav"
     fname, fext = audio_file_name.split('.', 1)
@@ -124,7 +124,7 @@ def transcribe_audio(audio_file_name, audio_file_path, duration_sec=300):
     return text
 
 
-def write_text_to_file(text_data, audio_file_path, dest_text_dir):
+def write_text_to_file(text_data, audio_file_name, audio_file_path, dest_text_dir):
     """
     Write hindi language text to file.
     """
@@ -136,8 +136,9 @@ def write_text_to_file(text_data, audio_file_path, dest_text_dir):
         os.makedirs(dest_text_dir)
 
     # Define the path to the text file
-    afile_arr = audio_file_path.split('/')
-    fname, fext = afile_arr[-1].split('.', 1)
+    # afile_arr = audio_file_path.split('/')
+    # fname, fext = afile_arr[-1].split('.', 1)
+    fname, fext = audio_file_name.split('.', 1)
     text_file_path = f"{dest_text_dir}/{fname}.txt"
 
     # Write the Hindi string to the text file
@@ -174,7 +175,7 @@ if __name__ == '__main__':
         for seg_fname, seg_fpath in segmented_audio_files:
             transcription = transcribe_audio(audio_file_name=seg_fname, audio_file_path=seg_fpath, duration_sec=300)
 
-            write_text_to_file(text_data=transcription, audio_file_path=audio_tuple[1], dest_text_dir=audio_tuple[3])
+            write_text_to_file(text_data=transcription, audio_file_name=seg_fname, audio_file_path=seg_fpath, dest_text_dir=audio_tuple[3])
 
     # audio_file_path = '/Users/anurag/Projects/audio-parser/output/Timothy_1/Timothy_1_part_1.mp3'
     # transcription = transcribe_audio(file_path=audio_file_path, duration_sec=300)
