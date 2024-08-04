@@ -28,7 +28,8 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
         segment = audio[start_time:end_time]
         
         # Export the segment to a new file
-        segment_filename = os.path.join(dest_file_dir, f"{audio_file_name}_part_{i + 1}.mp3")
+        segment_file_string = f"{audio_file_name}_part_{i + 1}.mp3"
+        segment_filename = os.path.join(dest_file_dir, segment_file_string)
 
         # Check if the output file already exists
         if os.path.exists(segment_filename):
@@ -36,7 +37,7 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
             continue
 
         segment.export(segment_filename, format="wav")
-        print(f"Segment {i + 1} saved as {dest_file_dir}_part_{i + 1}.mp3")
+        print(f"Segment {i + 1} saved as {segment_file_string}")
 
 
 def transcribe_audio(audio_file_path, duration_sec=300):
