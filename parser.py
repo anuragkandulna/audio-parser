@@ -149,7 +149,7 @@ if __name__ == '__main__':
     for audio_tuple in all_audio_files:
         transcription = transcribe_audio(audio_file_path=audio_tuple[1], duration_sec=300)
 
-        write_text_to_file(text_data=transcription, audio_file_path=audio_tuple[1], dest_text_dir=audio_tuple[2])
+        write_text_to_file(text_data=transcription, audio_file_path=audio_tuple[1], dest_text_dir=audio_tuple[3])
 
     # audio_file_path = '/Users/anurag/Projects/audio-parser/output/Timothy_1/Timothy_1_part_1.mp3'
     # transcription = transcribe_audio(file_path=audio_file_path, duration_sec=300)
