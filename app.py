@@ -4,12 +4,14 @@ from src.parser import get_source_file_names, segment_audio, get_all_audio_files
 from src.custom_logger import get_logger
 
 
+# Invoke Logger
+LOGGER = get_logger()
+
+
 def main():
     """
     All starts from main() in here.
     """
-    # Invoke Logger
-    LOGGER = get_logger(__name__)
 
     # Get respective directories.
     currWorkDir = os.getcwd()
