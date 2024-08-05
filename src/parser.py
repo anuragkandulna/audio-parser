@@ -8,8 +8,7 @@ from src.custom_logger import get_logger
 
 
 # Invoke Logger
-LOGGER = get_logger(__name__)
-
+LOGGER = get_logger()
 
 # --------------------------- Supporting functions start here ------------------------------- #
 def get_source_file_names(src_dir, dest_dir, text_dir):
