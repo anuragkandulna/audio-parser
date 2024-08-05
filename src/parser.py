@@ -42,7 +42,7 @@ def get_source_file_names(src_dir, dest_dir, text_dir):
     return file_name_list
 
 
-def get_all_audio_files_in_dir(audio_file_dir, file_extension=".mp3"):
+def get_all_audio_files_in_dir(audio_file_dir, file_extension=".wav"):
     """
     Read all files in a directory and return list of audio files.
     """
@@ -83,7 +83,7 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
     # Split the audio into segments
     for i in range(num_segments):
         # Export the segment to a new file
-        segment_file_string = f"{audio_file_name}_part_{i + 1}.mp3"
+        segment_file_string = f"{audio_file_name}_part_{i + 1}.wav"
         segment_filename = os.path.join(dest_file_dir, segment_file_string)
 
         # Check if the output file already exists
@@ -98,7 +98,7 @@ def segment_audio(audio_file_name, audio_file_path, dest_file_dir, segment_lengt
         segment = audio[start_time:end_time]
 
         # Export the segmented audio to mp3/wav format
-        segment.export(segment_filename, format="mp3")
+        segment.export(segment_filename, format="wav")
         # print(f"Segment {i + 1} saved as {segment_file_string}")
         LOGGER.info(f"{audio_file_name} segment {i + 1} saved as {segment_file_string}")
 
