@@ -4,12 +4,14 @@ from src.parser import get_source_file_names, segment_audio, get_all_audio_files
 from src.custom_logger import get_logger
 
 
-# Invoke Logger
-LOGGER = get_logger(__name__)
+def main():
+    """
+    All starts from main() in here.
+    """
+    # Invoke Logger
+    LOGGER = get_logger(__name__)
 
-
-##################################################################
-if __name__ == '__main__':
+    # Get respective directories.
     currWorkDir = os.getcwd()
     sourceRecordsDir = os.path.join('{cwd}/records/'.format(cwd=currWorkDir))
     resultRecordsDir = os.path.join('{cwd}/output/'.format(cwd=currWorkDir))
@@ -32,3 +34,8 @@ if __name__ == '__main__':
 
             # Write transcribed text to file
             write_text_to_file(text_data=transcription, audio_file_name=seg_fname, audio_file_path=seg_fpath, dest_text_dir=audio_tuple[3])
+
+
+# ==================================================== INVOKE MAIN HERE ======================================================= #
+if __name__ == '__main__':
+    main()
